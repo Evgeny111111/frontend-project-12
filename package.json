@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "start": "start-server -s ./frontend/dist",
+  "start": "npx start-server -s ./frontend/dist",
+  "start-server": "npx start-server -s ./frontend/dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

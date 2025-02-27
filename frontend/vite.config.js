@@ -17,4 +17,8 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    outDir: 'dist', // Указывает, куда сохранять билд
+    emptyOutDir: true, // Удаляет старые файлы перед сборкой
+  },
 });
