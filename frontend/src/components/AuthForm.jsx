@@ -1,56 +1,39 @@
-import { Formik, Form, Field } from "formik";
-import useAuth from "../hooks/useAuth";
-import useAuthContext from "../auth/authProvider";
+import { Formik, Form, Field } from 'formik';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
+import useAuthContext from '../auth/authProvider';
+import { useAuthenticateMutation } from '../API/auth';
 
 const Authform = () => {
-  const { authenticate } = useAuth();
-  const { token, logIn } = useAuthContext();
-  // console.log('useAuthContext', useAuthContext())
-
+  const { t } = useTranslation();
+  const { logIn } = useAuthContext();
+  const [authenticate] = useAuthenticateMutation();
 
   return (
     <Formik
       initialValues={{
-        username: "",
-        password: "",
+        username: '',
+        password: '',
       }}
-      //   onSubmit={async (values) => {
-      //     await new Promise((r) => setTimeout(r, 500));
-      //     alert(JSON.stringify(values, null, 2));
-      //   }}
-
       onSubmit={async (values, { setSubmitting, setFieldError }) => {
-        console.log(values);
-        // fetch("/api/v1/login", {
-        //     method: "POST",
-        //     body: JSON.stringify(values),
-        // })
-        // .then(response => response.json())
-        // .then(data => {
-        //     console.log("Ответ от сервера:", data);
-        //     setSubmitting(false); // Сброс флага после обработки
-        // })
-        // .catch(error => {
-        //     console.error("Ошибка:", error);
-        //     setSubmitting(false); // Сброс флага даже в случае ошибки
-        // });
-
         try {
-          const result = await authenticate(values);
-          console.log("Ответ от сервера:", result);
-          if (result) {
-            localStorage.setItem("token", result.token);
-            // localStorage.removeItem("token", result.token);
-            // console.log("Before calling logIn");
-            logIn(token, result.username);
-            // console.log("After calling logIn");
-          } else {
-            throw new Error("Invalid credentials");
+          const { data, error } = await authenticate(values);
+          if (data) {
+            logIn(data.token, data.username);
+          }
+          if (error) {
+            if (error.status === 'FETCH_ERROR') {
+              toast.error(t('toast.errorNetwork'), { autoClose: 2000 });
+            }
+            if (error.status === 401) {
+              setFieldError('username', t('errors.password'));
+              setFieldError('password', t('errors.password'));
+            } else {
+              throw new Error();
+            }
           }
         } catch (error) {
-          console.error("Ошибка", error);
-          setFieldError("username", "Неверные имя пользователя или пароль");
-          setFieldError("password", "Неверные имя пользователя или пароль");
+          console.error(error);
         } finally {
           setSubmitting(false);
         }
@@ -63,37 +46,37 @@ const Authform = () => {
             <Field
               id="username"
               name="username"
-              placeholder="Ваш ник"
+              placeholder={t('authForm.username')}
               className={`form-control ${
-                touched.username && errors.username ? "is-invalid" : ""
+                touched.username && errors.username ? 'is-invalid' : ''
               }`}
               required
             />
             <label className="form-label" htmlFor="username">
-              Ваш ник
+              {t('authForm.username')}
             </label>
           </div>
           <div className="form-floating mb-4">
             <Field
               id="password"
               name="password"
-              placeholder="Пароль"
+              placeholder={t('authForm.password')}
               className={`form-control ${
-                touched.password && errors.password ? "is-invalid" : ""
+                touched.password && errors.password ? 'is-invalid' : ''
               }`}
               required
-              autocomplete="current-password"
+              autoComplete="current-password"
               type="password"
             />
             <label className="form-label" htmlFor="password">
-              Пароль
+              {t('authForm.password')}
             </label>
             {touched.password && errors.password && (
               <div className="invalid-tooltip">{errors.password}</div>
             )}
           </div>
           <button type="submit" className="w-100 mb-3 btn btn-outline-primary">
-            Войти
+            {t('authForm.button')}
           </button>
         </Form>
       )}

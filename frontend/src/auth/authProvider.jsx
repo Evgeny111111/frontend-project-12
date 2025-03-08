@@ -1,57 +1,57 @@
-import { useContext, createContext, useState} from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import {
-  setAuthenticated,
-  isAuthenticatedSelector,
-} from "../store/slices/authSlices";
+  useContext, createContext, useState, useMemo, useCallback,
+} from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export const getToken = () => {
-  return localStorage.getItem('token'); // Или другое хранилище токена
-};
+export const getToken = () => localStorage.getItem('token');
 
 const AuthContext = createContext({});
-
 const useAuthContext = () => useContext(AuthContext);
 
 export const AuthContextProvider = ({ children }) => {
-  const isAuthenticated = useSelector(isAuthenticatedSelector);
-
-  const token = localStorage.getItem('token');
-  console.log('token>>>>', token)
-
+  const token = getToken();
   const storedUser = localStorage.getItem('user');
-
-
   const [authState, setAuthState] = useState({
     token: token || null,
-    // user: null,
-    user: storedUser ? JSON.parse(storedUser) : null, // Парсим пользователя из JSON
-
+    user: storedUser ? JSON.parse(storedUser) : null,
+    isAuthenticated: !!token,
   });
 
-  console.log('authState', authState)
-
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const logIn = (token, user) => {
-    dispatch(setAuthenticated(true));
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("user", JSON.stringify(user));
-    setAuthState({token: token, user: user})
-    navigate("/");
-  };
+  const logIn = useCallback((newToken, newUser) => {
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(newUser));
+    setAuthState({
+      token: newToken,
+      user: newUser,
+      isAuthenticated: true,
+    });
+    navigate('/');
+  }, [navigate]);
 
-  const logOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setAuthState({ token: null, user: null });
-    navigate("/login");
-  };
+  const logOut = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setAuthState({
+      token: null,
+      user: null,
+      isAuthenticated: false,
+    });
+    navigate('/login');
+  }, [navigate]);
+
+  const authContextValue = useMemo(
+    () => ({
+      ...authState,
+      logIn,
+      logOut,
+    }),
+    [authState, logIn, logOut],
+  );
 
   return (
-    <AuthContext.Provider value={{ ...authState, isAuthenticated, logIn, logOut }}>
+    <AuthContext.Provider value={authContextValue}>
       {children}
     </AuthContext.Provider>
   );
