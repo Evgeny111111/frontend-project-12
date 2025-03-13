@@ -5,12 +5,15 @@
   "main": "index.js",
   "scripts": {
     "build": "npm run build --prefix frontend",
-    "start": "start-server -s ./frontend/dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "start-server -s ./frontend/dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@hexlet/chat-server": "^2.0.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.51.0",
+    "@types/node": "^22.13.10"
   }
 }
