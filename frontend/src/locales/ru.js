@@ -1,5 +1,5 @@
 export default {
-    translation:
+  translation:
           {
             header: {
               brand: 'Hexlet Chat',
@@ -73,6 +73,6 @@ export default {
               renameChannel: 'Канал переименован',
               errorNetwork: 'Ошибка соединения',
             },
-  
+
           },
-  };
+};

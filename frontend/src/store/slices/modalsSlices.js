@@ -10,13 +10,15 @@ const modalsSlices = createSlice({
   name: 'modals',
   initialState,
   reducers: {
-    changeModalShow: (state, action) => {
-      state.modalShow = action.payload.modalShow;
-      state.modalType = action.payload.modalType;
-    },
-    setModalChannel: (state, action) => {
-      state.modalChannel = action.payload;
-    },
+    changeModalShow: (state, action) => ({
+      ...state, // создаем новый объект
+      modalShow: action.payload.modalShow,
+      modalType: action.payload.modalType,
+    }),
+    setModalChannel: (state, action) => ({
+      ...state, // создаем новый объект
+      modalChannel: action.payload,
+    }),
   },
 });
 
