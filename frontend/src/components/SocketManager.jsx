@@ -38,7 +38,7 @@ const SocketManager = () => {
             (channel) => channel.id === updatedChannel.id,
           );
           if (index !== -1) {
-            // eslint-disable-next-line no-param-reassign
+             
             draft[index].name = updatedChannel.name;
           }
         }),
