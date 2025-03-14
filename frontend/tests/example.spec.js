@@ -9,10 +9,11 @@ test('has title', async ({ page }) => {
 });
 
 test('get started link', async ({ page }) => {
-  await page.goto('http://localhost:5001/');
+  await page.goto('http://localhost:5001/', { timeout: 60000 })
 
   // Click the get started link.
-  await page.getByRole('link', { name: 'Start Here' }).click({ timeout: 60000 });
+  await expect(page.getByRole('button', { name: 'Add Chat' })).toBeVisible();
+  await page.getByRole('button', { name: 'Add Chat' }).click();
 
   // Expects page to have a heading with the name of Installation.
   await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
