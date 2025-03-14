@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
 import { Nav, ButtonGroup, Dropdown } from 'react-bootstrap';
@@ -105,4 +106,4 @@ const Channels = () => {
   );
 };
 
-export default Channels;
+export default React.memo(Channels);
