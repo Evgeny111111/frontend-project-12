@@ -16,6 +16,7 @@ const MessageInput = () => {
     channelId: null,
     username: user,
   });
+  const [isSending, setIsSending] = useState(false); // Добавим состояние для отслеживания отправки
 
   useEffect(() => {
     if (currentChannel) {
@@ -35,12 +36,18 @@ const MessageInput = () => {
 
   const handleAddMessage = async (event) => {
     event.preventDefault();
-    if (!formData.body.trim()) return;
+    if (!formData.body.trim() || isSending) return; // Проверка, не отправляется ли сообщение
+
+    setIsSending(true); // Устанавливаем флаг отправки в true
+
     await addMessage(formData);
+
     setFormData((prev) => ({
       ...prev,
       body: '',
     }));
+
+    setIsSending(false); // После отправки сбрасываем флаг
   };
 
   return (
@@ -59,7 +66,7 @@ const MessageInput = () => {
             value={formData.body}
             onChange={handleChange}
           />
-          <Button type="submit" variant="light" disabled={!formData.body.trim()}>
+          <Button type="submit" variant="light" disabled={!formData.body.trim() || isSending}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
