@@ -8,4 +8,4 @@ build:
 	npm run build
 
 lint:
-	 npx eslint src --ext .js,.jsx
+	npx eslint . --ext .js,.jsx --config .eslintrc.yml

@@ -16,9 +16,7 @@ const SocketManager = () => {
 
     socket.on('newChannel', (payload) => {
       dispatch(
-        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
-          draft.push(payload);
-        }),
+        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => [...draft, payload]),
       );
     });
 
@@ -33,23 +31,13 @@ const SocketManager = () => {
 
     socket.on('renameChannel', (updatedChannel) => {
       dispatch(
-        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => {
-          const index = draft.findIndex(
-            (channel) => channel.id === updatedChannel.id,
-          );
-          if (index !== -1) {
-             
-            draft[index].name = updatedChannel.name;
-          }
-        }),
+        channelsApi.util.updateQueryData('getChannels', undefined, (draft) => draft.map((channel) => (channel.id === updatedChannel.id ? { ...channel, name: updatedChannel.name } : channel))),
       );
     });
 
     socket.on('newMessage', (newMessage) => {
       dispatch(
-        messagesApi.util.updateQueryData('getMessages', undefined, (draft) => {
-          draft.push(newMessage);
-        }),
+        messagesApi.util.updateQueryData('getMessages', undefined, (draft) => [...draft, newMessage]),
       );
     });
 
