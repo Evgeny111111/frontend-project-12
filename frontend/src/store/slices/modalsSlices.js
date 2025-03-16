@@ -10,15 +10,16 @@ const modalsSlices = createSlice({
   name: 'modals',
   initialState,
   reducers: {
-    changeModalShow: (state, action) => ({
-      ...state, // создаем новый объект
-      modalShow: action.payload.modalShow,
-      modalType: action.payload.modalType,
-    }),
-    setModalChannel: (state, action) => ({
-      ...state, // создаем новый объект
-      modalChannel: action.payload,
-    }),
+    changeModalShow: (state, action) => {
+      // eslint-disable-next-line no-param-reassign
+      state.modalShow = action.payload.modalShow;
+      // eslint-disable-next-line no-param-reassign
+      state.modalType = action.payload.modalType;
+    },
+    setModalChannel: (state, action) => {
+      // eslint-disable-next-line no-param-reassign
+      state.modalChannel = action.payload;
+    },
   },
 });
 
