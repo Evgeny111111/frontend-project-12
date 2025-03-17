@@ -11,6 +11,7 @@ const MessageInput = () => {
   const [addMessage] = useAddMessageMutation();
   const currentChannel = useSelector(selectCurrentChannel);
   const { user } = useAuthContext();
+  const [isSending, setIsSending] = useState(false);
   const [formData, setFormData] = useState({
     body: '',
     channelId: null,
@@ -35,12 +36,18 @@ const MessageInput = () => {
 
   const handleAddMessage = async (event) => {
     event.preventDefault();
-    if (!formData.body.trim()) return;
-    await addMessage(formData);
-    setFormData((prev) => ({
-      ...prev,
-      body: '',
-    }));
+    if (!formData.body.trim() || isSending) return; // Проверка на пустой ввод и повторную отправку
+
+    setIsSending(true);
+    try {
+      await addMessage(formData);
+      setFormData((prev) => ({
+        ...prev,
+        body: '',
+      }));
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -59,7 +66,11 @@ const MessageInput = () => {
             value={formData.body}
             onChange={handleChange}
           />
-          <Button type="submit" variant="light" disabled={!formData.body.trim()}>
+          <Button
+            type="submit"
+            variant="light"
+            disabled={!formData.body.trim() || isSending} // Отключаем кнопку при отправке
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 16 16"
