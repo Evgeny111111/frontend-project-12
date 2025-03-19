@@ -3,8 +3,9 @@ const routes = {
   login: '/login',
   signup: '/signup',
   notFound: '*',
-  messages: '/api/v1/messages',
-  messageByChannel: (channelId) => `/api/v1/messages/${channelId}`,
+  api: {
+    messages: '/api/v1/messages',
+  },
 };
 
 export default routes;
