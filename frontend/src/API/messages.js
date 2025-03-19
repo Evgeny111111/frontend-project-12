@@ -16,18 +16,18 @@ export const messagesApi = createApi({
   }),
   endpoints: (builder) => ({
     getMessages: builder.query({
-      query: () => routes.api.messages,
+      query: () => routes.api.messages, // Используем маршрут для получения сообщений
     }),
     addMessage: builder.mutation({
       query: (newMessage) => ({
-        url: routes.api.messages,
+        url: routes.api.messages, // Используем маршрут для добавления сообщений
         method: 'POST',
         body: newMessage,
       }),
     }),
     deleteMessagesByChannelId: builder.mutation({
       query: (channelId) => ({
-        url: `${routes.api.messages}?channelId=${channelId}`, // Используем query параметр
+        url: `${routes.api.messages}?channelId=${channelId}`, // Указываем канал для удаления сообщений
         method: 'DELETE',
       }),
     }),
