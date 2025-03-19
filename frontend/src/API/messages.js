@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getToken } from '../auth/authProvider';
+import routes from '../routes/routes';
 
 export const messagesApi = createApi({
   reducerPath: 'messagesApi',
@@ -15,18 +16,18 @@ export const messagesApi = createApi({
   }),
   endpoints: (builder) => ({
     getMessages: builder.query({
-      query: () => 'messages',
+      query: () => routes.api.messages,
     }),
     addMessage: builder.mutation({
       query: (newMessage) => ({
-        url: 'messages',
+        url: routes.api.messages,
         method: 'POST',
         body: newMessage,
       }),
     }),
     deleteMessagesByChannelId: builder.mutation({
       query: (channelId) => ({
-        url: `messages/${channelId}`,
+        url: `${routes.api.messages}?channelId=${channelId}`, // Используем query параметр
         method: 'DELETE',
       }),
     }),
