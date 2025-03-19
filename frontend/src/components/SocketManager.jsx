@@ -4,23 +4,23 @@ import io from 'socket.io-client';
 import { channelsApi } from '../API/channels';
 import { messagesApi } from '../API/messages';
 
+const socket = io();
+
 const SocketManager = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const socketInstance = io();
-
-    socketInstance.on('connect', () => {
-      console.log('WebSocket connected:', socketInstance.id);
+    socket.on('connect', () => {
+      console.log('WebSocket connected:', socket.id);
     });
 
-    socketInstance.on('newChannel', (payload) => {
+    socket.on('newChannel', (payload) => {
       dispatch(
         channelsApi.util.updateQueryData('getChannels', undefined, (draft) => [...draft, payload]),
       );
     });
 
-    socketInstance.on('removeChannel', (channelId) => {
+    socket.on('removeChannel', (channelId) => {
       dispatch(
         channelsApi.util.updateQueryData('getChannels', undefined, (draft) => draft.filter((channel) => channel.id !== channelId.id)),
       );
@@ -29,27 +29,27 @@ const SocketManager = () => {
       );
     });
 
-    socketInstance.on('renameChannel', (updatedChannel) => {
+    socket.on('renameChannel', (updatedChannel) => {
       dispatch(
         channelsApi.util.updateQueryData('getChannels', undefined, (draft) => draft.map((channel) => (channel.id === updatedChannel.id ? { ...channel, name: updatedChannel.name } : channel))),
       );
     });
 
-    socketInstance.on('newMessage', (newMessage) => {
+    socket.on('newMessage', (newMessage) => {
       dispatch(
         messagesApi.util.updateQueryData('getMessages', undefined, (draft) => [...draft, newMessage]),
       );
     });
 
-    socketInstance.on('connect_error', (err) => {
+    socket.on('connect_error', (err) => {
       console.error('Connection error:', err);
     });
 
     return () => {
-      socketInstance.off('newChannel');
-      socketInstance.off('removeChannel');
-      socketInstance.off('renameChannel');
-      socketInstance.off('newMessage');
+      socket.off('newChannel');
+      socket.off('removeChannel');
+      socket.off('renameChannel');
+      socket.off('newMessage');
     };
   }, [dispatch]);
 
