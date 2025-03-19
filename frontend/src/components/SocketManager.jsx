@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import io from 'socket.io-client';
 import { channelsApi } from '../API/channels';
 import { messagesApi } from '../API/messages';
-
-const socket = io();
+import socket from './socket'; // Импортируем уже созданный сокет
 
 const SocketManager = () => {
   const dispatch = useDispatch();
