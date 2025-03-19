@@ -2,6 +2,7 @@ import {
   useContext, createContext, useState, useMemo, useCallback,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '../routes/routes';
 
 export const getToken = () => localStorage.getItem('token');
 
@@ -27,7 +28,7 @@ export const AuthContextProvider = ({ children }) => {
       user: newUser,
       isAuthenticated: true,
     });
-    navigate('/');
+    navigate(ROUTES.HOME); // Используем ROUTES для навигации
   }, [navigate]);
 
   const logOut = useCallback(() => {
@@ -38,7 +39,7 @@ export const AuthContextProvider = ({ children }) => {
       user: null,
       isAuthenticated: false,
     });
-    navigate('/login');
+    navigate(ROUTES.LOGIN); // Используем ROUTES для навигации
   }, [navigate]);
 
   const authContextValue = useMemo(

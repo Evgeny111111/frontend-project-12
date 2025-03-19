@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { getToken } from '../auth/authProvider';
 
+const DELETE_MESSAGE_URL = (channelId) => `messages/${encodeURIComponent(channelId)}`;
+
 export const messagesApi = createApi({
   reducerPath: 'messagesApi',
   baseQuery: fetchBaseQuery({
@@ -26,7 +28,7 @@ export const messagesApi = createApi({
     }),
     deleteMessagesByChannelId: builder.mutation({
       query: (channelId) => ({
-        url: `messages/${channelId}`,
+        url: DELETE_MESSAGE_URL(channelId), // Используем функцию для формирования URL
         method: 'DELETE',
       }),
     }),

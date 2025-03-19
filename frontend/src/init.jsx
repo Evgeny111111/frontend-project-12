@@ -4,6 +4,7 @@ import { I18nextProvider, initReactI18next } from 'react-i18next';
 import store from './store/index.js';
 import App from './App.jsx';
 import resources from './locales/index.js';
+import addWords from './initLeoProfanity';
 
 const init = async () => {
   const i18n = i18next.createInstance();
@@ -17,6 +18,8 @@ const init = async () => {
         escapeValue: false,
       },
     });
+
+  addWords();
 
   return (
     <Provider store={store}>
